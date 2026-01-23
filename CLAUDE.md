@@ -1,11 +1,11 @@
 # CLAUDE.md - AI Assistant Guide
 
-> **Repository Status**: This repository is currently in its initial state. This document will be updated as the codebase evolves.
+> **Repository Status**: Active Next.js website project for The Running Horse LLC
 > **Last Updated**: 2026-01-23
 
 ## Overview
 
-This document serves as a comprehensive guide for AI assistants (like Claude) working on this SaaS application. It outlines the codebase structure, development workflows, conventions, and best practices to follow.
+This document serves as a comprehensive guide for AI assistants (like Claude) working on The Running Horse LLC corporate website. This is a professional business website built with Next.js, TypeScript, and Tailwind CSS for a UAE-registered general trading company.
 
 ## Table of Contents
 
@@ -24,17 +24,20 @@ This document serves as a comprehensive guide for AI assistants (like Claude) wo
 
 ## Project Overview
 
-**Project Name**: [To be defined]
-**Type**: SaaS Application
-**Purpose**: [To be defined]
+**Project Name**: The Running Horse LLC Corporate Website
+**Type**: Business/Corporate Website
+**Purpose**: Official online presence for bank verification, compliance documentation, and B2B partner engagement
 
 ### Key Features
-- [Feature 1]
-- [Feature 2]
-- [Feature 3]
+- Professional multi-page corporate website
+- Fully responsive mobile design
+- SEO-optimized pages with metadata
+- Contact form for business inquiries
+- Comprehensive company and service information
+- Compliance and certification documentation
 
 ### Architecture Overview
-[To be defined - e.g., monorepo, microservices, monolithic, etc.]
+Next.js 14 App Router application with server-side rendering, TypeScript for type safety, and Tailwind CSS for styling. Static generation for optimal performance.
 
 ---
 
@@ -42,46 +45,65 @@ This document serves as a comprehensive guide for AI assistants (like Claude) wo
 
 ```
 /home/user/saas/
-├── [To be populated as project develops]
+├── app/                      # Next.js App Router pages
+│   ├── about/               # About Us page
+│   ├── clients/             # Clients & Partners page
+│   ├── compliance/          # Compliance & Certifications page
+│   ├── contact/             # Contact Us page (with form)
+│   ├── how-we-work/         # How We Work page
+│   ├── privacy/             # Privacy Policy page
+│   ├── products/            # Products page
+│   ├── services/            # Services page
+│   ├── terms/               # Terms of Service page
+│   ├── globals.css          # Global styles and Tailwind
+│   ├── layout.tsx           # Root layout with Header/Footer
+│   └── page.tsx             # Home page
+├── components/              # React components
+│   ├── Footer.tsx           # Site footer
+│   └── Header.tsx           # Navigation header
+├── public/                  # Static assets
+├── CLAUDE.md               # This file
+├── README.md               # Project documentation
+├── next.config.js          # Next.js configuration
+├── package.json            # Dependencies and scripts
+├── postcss.config.js       # PostCSS configuration
+├── tailwind.config.ts      # Tailwind CSS configuration
+└── tsconfig.json           # TypeScript configuration
 ```
 
 ### Key Directories
 
-**[To be updated as project structure emerges]**
-
-- `/src` - Main application source code
-- `/tests` or `/test` - Test files
-- `/docs` - Additional documentation
-- `/config` - Configuration files
-- `/scripts` - Build and utility scripts
-- `/public` or `/static` - Static assets
+- `/app` - All pages and routes using Next.js 14 App Router
+- `/components` - Reusable React components (Header, Footer)
+- `/public` - Static assets (images, icons, etc.)
+- Root config files for Next.js, TypeScript, Tailwind CSS
 
 ---
 
 ## Technology Stack
 
 ### Frontend
-- **Framework**: [e.g., React, Vue, Angular, Next.js]
-- **Language**: [e.g., TypeScript, JavaScript]
-- **Styling**: [e.g., CSS Modules, Tailwind, Styled Components]
-- **State Management**: [e.g., Redux, Zustand, Context API]
+- **Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript 5.4+
+- **Styling**: Tailwind CSS 3.4
+- **State Management**: React useState hooks (no global state needed)
 
 ### Backend
-- **Framework**: [e.g., Node.js/Express, Django, Rails, FastAPI]
-- **Language**: [e.g., TypeScript, Python, Ruby, Go]
-- **Database**: [e.g., PostgreSQL, MongoDB, MySQL]
-- **ORM/Query Builder**: [e.g., Prisma, TypeORM, Sequelize]
+- **Framework**: Next.js (server components and API routes)
+- **Language**: TypeScript
+- **Database**: None (static website, form handling to be added)
+- **ORM/Query Builder**: N/A
 
 ### Infrastructure
-- **Hosting**: [e.g., AWS, GCP, Vercel, Netlify]
-- **Containerization**: [e.g., Docker, Kubernetes]
-- **CI/CD**: [e.g., GitHub Actions, GitLab CI, CircleCI]
+- **Hosting**: Ready for Vercel, Netlify, or any Node.js hosting
+- **Containerization**: Not required for this project
+- **CI/CD**: Can be configured with GitHub Actions or platform-specific CI/CD
 
 ### Development Tools
-- **Package Manager**: [e.g., npm, yarn, pnpm]
-- **Build Tool**: [e.g., Webpack, Vite, Turbopack]
-- **Linting**: [e.g., ESLint, Prettier]
-- **Testing**: [e.g., Jest, Vitest, Pytest, Cypress]
+- **Package Manager**: npm
+- **Build Tool**: Next.js built-in (Turbopack/Webpack)
+- **Linting**: Built-in Next.js linting
+- **Testing**: Not currently configured (can add Jest/Vitest if needed)
 
 ---
 
@@ -90,20 +112,25 @@ This document serves as a comprehensive guide for AI assistants (like Claude) wo
 ### Getting Started
 
 ```bash
-# Clone the repository
-git clone [repository-url]
-cd saas
+# Clone the repository (if not already cloned)
+cd /home/user/saas
 
 # Install dependencies
-[package-manager install command]
-
-# Set up environment variables
-cp .env.example .env
-# Edit .env with your local configuration
+npm install
 
 # Start development server
-[start command]
+npm run dev
+
+# Open http://localhost:3000 in your browser
+
+# Build for production
+npm run build
+
+# Start production server
+npm start
 ```
+
+No environment variables required for basic functionality. The website is fully functional without a backend.
 
 ### Branch Strategy
 
@@ -316,18 +343,14 @@ describe('ComponentName', () => {
 
 ### Running Tests
 
+Tests are not currently configured for this project. If testing is needed in the future:
+
 ```bash
-# Run all tests
-[test command]
+# Install testing dependencies
+npm install --save-dev @testing-library/react @testing-library/jest-dom jest jest-environment-jsdom
 
-# Run specific test file
-[test command for specific file]
-
-# Run with coverage
-[test coverage command]
-
-# Run in watch mode
-[test watch command]
+# Add test scripts to package.json
+# Run tests with: npm test
 ```
 
 ---
@@ -352,17 +375,29 @@ Typical pipeline stages:
 
 ### Deployment Process
 
+**Vercel (Recommended)**:
 ```bash
-# [To be defined based on deployment strategy]
+npm install -g vercel
+vercel
+```
+
+**Netlify**:
+```bash
+netlify deploy --prod
+```
+
+**Manual Build**:
+```bash
+npm run build
+# Deploy the .next folder and package.json to your hosting
 ```
 
 ### Environment Variables
 
-Required environment variables:
-- `DATABASE_URL`: Database connection string
-- `API_KEY`: API authentication key
-- `JWT_SECRET`: Secret for JWT token signing
-- [Add more as needed]
+No environment variables required for the current version. Optional additions for future enhancements:
+- `NEXT_PUBLIC_CONTACT_FORM_ENDPOINT`: Backend API for form submission
+- `NEXT_PUBLIC_ANALYTICS_ID`: Google Analytics or similar
+- `NEXT_PUBLIC_SITE_URL`: Production URL for SEO
 
 ---
 
@@ -497,19 +532,21 @@ Before submitting changes, verify:
 ## Additional Resources
 
 ### Documentation Links
-- [Project Documentation]: [URL]
-- [API Documentation]: [URL]
-- [Design System]: [URL]
+- Project Documentation: README.md in this repository
+- API Documentation: N/A (static website)
+- Design System: Tailwind CSS utilities documented in globals.css
 
 ### External Resources
-- [Framework Documentation]: [URL]
-- [Database Documentation]: [URL]
-- [Cloud Platform Docs]: [URL]
+- [Next.js 14 Documentation](https://nextjs.org/docs)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [TypeScript Documentation](https://www.typescriptlang.org/docs)
+- [React Documentation](https://react.dev)
 
-### Team Contacts
-- **Project Lead**: [Name/Contact]
-- **Technical Lead**: [Name/Contact]
-- **DevOps**: [Name/Contact]
+### Company Information
+- **Company**: The Running Horse LLC
+- **Business**: General Trading (Leather Goods, Clothing, Cosmetics, Fashion Accessories)
+- **Location**: United Arab Emirates
+- **Email**: info@therunninghorse.ae
 
 ---
 
@@ -517,18 +554,48 @@ Before submitting changes, verify:
 
 ### 2026-01-23
 - Initial CLAUDE.md created
-- Repository initialized
-- Template structure established
+- Repository initialized with Next.js 14, TypeScript, Tailwind CSS
+- Complete corporate website built with 10 pages
+- All main pages created: Home, About, Services, Products, How We Work, Clients, Compliance, Contact, Privacy, Terms
+- Professional responsive design implemented
+- SEO optimization added to all pages
+- README.md documentation created
 
 ---
 
-## Notes for Future Updates
+## Project-Specific Notes
 
-This document should be updated when:
-- Project structure changes significantly
-- New conventions are adopted
-- Technology stack changes
-- New tools or workflows are introduced
-- Common issues are discovered and resolved
+### Website Pages
+1. **Home (/)** - Company intro, services overview, product categories, CTA sections
+2. **About (/about)** - Company background, mission, vision, values, ethical practices
+3. **Services (/services)** - Six main trading services with detailed descriptions
+4. **Products (/products)** - Four product categories: leather, clothing, cosmetics, accessories
+5. **How We Work (/how-we-work)** - 7-step business process from inquiry to delivery
+6. **Clients & Partners (/clients)** - Target audience, geographic reach, partnership benefits
+7. **Compliance (/compliance)** - UAE licensing, regulations, quality standards, certifications
+8. **Contact (/contact)** - Contact form, business information, multiple contact methods
+9. **Privacy (/privacy)** - Privacy policy and data protection information
+10. **Terms (/terms)** - Terms of service and legal information
 
-**Update Instructions**: Keep this document concise but comprehensive. Remove this notes section once the project is established and the template has been filled with actual project information.
+### Design System
+- **Primary Color**: Blue (primary-600 #0284c7)
+- **Accent**: Gold for highlights
+- **Typography**: Inter font family
+- **Responsive**: Mobile-first with md, lg breakpoints
+- **Components**: Card, button, input styles in globals.css
+
+### Custom Tailwind Classes
+- `.container-custom` - Max-width container with padding
+- `.section-padding` - Standard vertical spacing (py-16 md:py-24)
+- `.btn-primary`, `.btn-secondary`, `.btn-outline` - Button variants
+- `.heading-xl`, `.heading-lg`, `.heading-md`, `.heading-sm` - Typography scale
+- `.card` - Card component with hover effects
+- `.input-field`, `.textarea-field` - Form inputs
+
+### Future Enhancements
+- Backend API for contact form submission (currently client-side only)
+- Multi-language support (Arabic/English toggle)
+- CMS integration for content management
+- Client portal with authentication
+- Blog or news section
+- Analytics integration (Google Analytics, etc.)
