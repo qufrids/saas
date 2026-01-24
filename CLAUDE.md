@@ -1,7 +1,7 @@
 # CLAUDE.md - AI Assistant Guide
 
 > **Repository Status**: Active Next.js website project for The Running Horse LLC
-> **Last Updated**: 2026-01-23
+> **Last Updated**: 2026-01-24
 
 ## Overview
 
@@ -37,7 +37,7 @@ This document serves as a comprehensive guide for AI assistants (like Claude) wo
 - Compliance and certification documentation
 
 ### Architecture Overview
-Next.js 14 App Router application with server-side rendering, TypeScript for type safety, and Tailwind CSS for styling. Static generation for optimal performance.
+Next.js 14 App Router application configured for static HTML export (`output: 'export'`), TypeScript for type safety, and Tailwind CSS for styling. Deployed to Netlify as a fully static site. Contact form submissions handled via Formspree.
 
 ---
 
@@ -49,7 +49,7 @@ Next.js 14 App Router application with server-side rendering, TypeScript for typ
 │   ├── about/               # About Us page
 │   ├── clients/             # Clients & Partners page
 │   ├── compliance/          # Compliance & Certifications page
-│   ├── contact/             # Contact Us page (with form)
+│   ├── contact/             # Contact Us page (Formspree form)
 │   ├── how-we-work/         # How We Work page
 │   ├── privacy/             # Privacy Policy page
 │   ├── products/            # Products page
@@ -60,11 +60,11 @@ Next.js 14 App Router application with server-side rendering, TypeScript for typ
 │   └── page.tsx             # Home page
 ├── components/              # React components
 │   ├── Footer.tsx           # Site footer
-│   └── Header.tsx           # Navigation header
-├── public/                  # Static assets
+│   └── Header.tsx           # Navigation header (client component)
 ├── CLAUDE.md               # This file
 ├── README.md               # Project documentation
-├── next.config.js          # Next.js configuration
+├── netlify.toml            # Netlify deployment configuration
+├── next.config.js          # Next.js configuration (static export)
 ├── package.json            # Dependencies and scripts
 ├── postcss.config.js       # PostCSS configuration
 ├── tailwind.config.ts      # Tailwind CSS configuration
@@ -75,8 +75,9 @@ Next.js 14 App Router application with server-side rendering, TypeScript for typ
 
 - `/app` - All pages and routes using Next.js 14 App Router
 - `/components` - Reusable React components (Header, Footer)
-- `/public` - Static assets (images, icons, etc.)
-- Root config files for Next.js, TypeScript, Tailwind CSS
+- Root config files for Next.js, TypeScript, Tailwind CSS, and Netlify
+
+**Note**: There is no `public/` directory. All icons and graphics are inline SVGs within the components.
 
 ---
 
@@ -89,15 +90,16 @@ Next.js 14 App Router application with server-side rendering, TypeScript for typ
 - **State Management**: React useState hooks (no global state needed)
 
 ### Backend
-- **Framework**: Next.js (server components and API routes)
-- **Language**: TypeScript
-- **Database**: None (static website, form handling to be added)
-- **ORM/Query Builder**: N/A
+- **Framework**: None (fully static site)
+- **Form Handling**: Formspree (sends to info@therunninghorse.ae)
+- **Database**: None
+- **API Routes**: None (static export mode disables API routes)
 
 ### Infrastructure
-- **Hosting**: Ready for Vercel, Netlify, or any Node.js hosting
-- **Containerization**: Not required for this project
-- **CI/CD**: Can be configured with GitHub Actions or platform-specific CI/CD
+- **Hosting**: Netlify (configured via `netlify.toml`)
+- **Build Output**: Static HTML in `out/` directory
+- **Containerization**: Not required
+- **CI/CD**: Netlify auto-deploys on push
 
 ### Development Tools
 - **Package Manager**: npm
@@ -112,7 +114,7 @@ Next.js 14 App Router application with server-side rendering, TypeScript for typ
 ### Getting Started
 
 ```bash
-# Clone the repository (if not already cloned)
+# Navigate to repository
 cd /home/user/saas
 
 # Install dependencies
@@ -123,14 +125,14 @@ npm run dev
 
 # Open http://localhost:3000 in your browser
 
-# Build for production
+# Build for production (outputs to out/ directory)
 npm run build
 
-# Start production server
-npm start
+# Serve the static build locally (requires a static server)
+npx serve out
 ```
 
-No environment variables required for basic functionality. The website is fully functional without a backend.
+No environment variables required. The website is fully static with Formspree handling contact form submissions.
 
 ### Branch Strategy
 
@@ -365,37 +367,43 @@ npm install --save-dev @testing-library/react @testing-library/jest-dom jest jes
 
 ### CI/CD Pipeline
 
-**[To be defined based on chosen CI/CD platform]**
+**Platform**: Netlify (auto-deploy on push)
 
-Typical pipeline stages:
-1. **Lint**: Check code style and quality
-2. **Test**: Run automated tests
-3. **Build**: Compile/bundle application
-4. **Deploy**: Push to target environment
+Pipeline stages:
+1. **Install**: `npm install` (automatic)
+2. **Build**: `npm run build` (outputs to `out/`)
+3. **Deploy**: Netlify serves the `out/` directory
 
 ### Deployment Process
 
-**Vercel (Recommended)**:
-```bash
-npm install -g vercel
-vercel
-```
+**Netlify (Current)**:
+Configured in `netlify.toml`:
+- Build command: `npm run build`
+- Publish directory: `out`
+- SPA-style redirect: all routes → `/index.html` (status 200)
 
-**Netlify**:
-```bash
-netlify deploy --prod
-```
+Deploys automatically when pushing to the connected branch.
 
 **Manual Build**:
 ```bash
 npm run build
-# Deploy the .next folder and package.json to your hosting
+# Static output is in the out/ directory
+# Upload out/ contents to any static hosting
+```
+
+**Alternative Hosting**:
+```bash
+# Vercel
+npm install -g vercel && vercel
+
+# Any static host - just serve the out/ directory
 ```
 
 ### Environment Variables
 
-No environment variables required for the current version. Optional additions for future enhancements:
-- `NEXT_PUBLIC_CONTACT_FORM_ENDPOINT`: Backend API for form submission
+No environment variables are required. The site is fully static with Formspree handling form submissions client-side.
+
+Optional additions for future enhancements:
 - `NEXT_PUBLIC_ANALYTICS_ID`: Google Analytics or similar
 - `NEXT_PUBLIC_SITE_URL`: Production URL for SEO
 
@@ -443,23 +451,32 @@ No environment variables required for the current version. Optional additions fo
 
 ### Common Issues
 
-**Issue**: [Common problem]
-**Solution**: [How to resolve]
+**Issue**: `npm run build` fails with image optimization errors
+**Solution**: Image optimization is disabled in `next.config.js` (`images: { unoptimized: true }`) because static export doesn't support it. If you see image-related build errors, ensure this config is present.
 
-**Issue**: [Another common problem]
-**Solution**: [How to resolve]
+**Issue**: Routes return 404 on Netlify
+**Solution**: The `netlify.toml` includes a catch-all redirect (`/* → /index.html` with status 200). Verify this file exists and is correctly formatted.
+
+**Issue**: Contact form submissions not arriving
+**Solution**: The form posts to `https://formspree.io/info@therunninghorse.ae`. Verify the Formspree account is active and the email is correct.
+
+**Issue**: Tailwind classes not applying
+**Solution**: Check that `tailwind.config.ts` content paths include the file you're editing. Current paths: `./pages/**`, `./components/**`, `./app/**`.
 
 ### Debug Mode
 
 ```bash
-# [Commands to enable debug mode]
+# Run dev server with verbose output
+npm run dev
+
+# Build and check for errors
+npm run build 2>&1
 ```
 
-### Logs
+### Build Output
 
-- **Application Logs**: [Location/command]
-- **Error Logs**: [Location/command]
-- **Access Logs**: [Location/command]
+- **Static files**: `out/` directory (generated by `npm run build`)
+- **Dev server**: `http://localhost:3000`
 
 ---
 
@@ -552,6 +569,14 @@ Before submitting changes, verify:
 
 ## Changelog
 
+### 2026-01-24
+- CLAUDE.md updated to reflect current codebase state
+- Contact form switched from Netlify Forms to Formspree integration
+- Company email (info@therunninghorse.ae) configured for form submissions
+- Horse icon SVG added to Header and Footer logos
+- Netlify deployment configured (netlify.toml added)
+- Static export confirmed working with `output: 'export'`
+
 ### 2026-01-23
 - Initial CLAUDE.md created
 - Repository initialized with Next.js 14, TypeScript, Tailwind CSS
@@ -592,10 +617,19 @@ Before submitting changes, verify:
 - `.card` - Card component with hover effects
 - `.input-field`, `.textarea-field` - Form inputs
 
+### Contact Form Integration
+
+- **Service**: Formspree
+- **Endpoint**: `https://formspree.io/info@therunninghorse.ae`
+- **Method**: POST with FormData
+- **Component**: `app/contact/page.tsx` (client component with `'use client'`)
+- **State Management**: React `useState` for `isSubmitting` and `isSubmitted`
+- **Success behavior**: Shows confirmation message for 5 seconds, then resets form
+
 ### Future Enhancements
-- Backend API for contact form submission (currently client-side only)
 - Multi-language support (Arabic/English toggle)
 - CMS integration for content management
 - Client portal with authentication
 - Blog or news section
 - Analytics integration (Google Analytics, etc.)
+- Static assets in `public/` directory (images, favicons)
