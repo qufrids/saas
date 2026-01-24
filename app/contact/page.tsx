@@ -14,8 +14,8 @@ export default function ContactPage() {
     const formData = new FormData(form)
 
     try {
-      // Submit to Formspree
-      const response = await fetch('https://formspree.io/f/xpwzbgky', {
+      // Submit to Formspree - replace with your email
+      const response = await fetch('https://formspree.io/info@therunninghorse.ae', {
         method: 'POST',
         body: formData,
         headers: {
