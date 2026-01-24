@@ -14,11 +14,13 @@ export default function ContactPage() {
     const formData = new FormData(form)
 
     try {
-      // Submit to Netlify Forms
-      const response = await fetch('/', {
+      // Submit to Formspree
+      const response = await fetch('https://formspree.io/f/xpwzbgky', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: new URLSearchParams(formData as any).toString()
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
       })
 
       if (response.ok) {
@@ -156,15 +158,9 @@ export default function ContactPage() {
 
                 <form
                   onSubmit={handleSubmit}
-                  name="contact"
                   method="POST"
-                  data-netlify="true"
-                  data-netlify-honeypot="bot-field"
                   className="space-y-6"
                 >
-                  {/* Hidden fields for Netlify */}
-                  <input type="hidden" name="form-name" value="contact" />
-                  <input type="hidden" name="bot-field" />
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
