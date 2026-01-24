@@ -3,30 +3,37 @@
 import { useState } from 'react'
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    company: '',
-    email: '',
-    phone: '',
-    subject: '',
-    message: ''
-  })
-
   const [submitted, setSubmitted] = useState(false)
+  const [loading, setLoading] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // In production, this would send to a backend API
-    console.log('Form submitted:', formData)
-    setSubmitted(true)
-    setTimeout(() => setSubmitted(false), 5000)
-  }
+    setLoading(true)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    })
+    const form = e.currentTarget
+    const formData = new FormData(form)
+
+    try {
+      // Submit to Netlify Forms
+      const response = await fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: new URLSearchParams(formData as any).toString()
+      })
+
+      if (response.ok) {
+        setSubmitted(true)
+        form.reset()
+        setTimeout(() => setSubmitted(false), 5000)
+      } else {
+        alert('There was an error submitting the form. Please try again.')
+      }
+    } catch (error) {
+      console.error('Form submission error:', error)
+      alert('There was an error submitting the form. Please try again.')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
@@ -147,7 +154,18 @@ export default function ContactPage() {
                   </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form
+                  onSubmit={handleSubmit}
+                  name="contact"
+                  method="POST"
+                  data-netlify="true"
+                  data-netlify-honeypot="bot-field"
+                  className="space-y-6"
+                >
+                  {/* Hidden fields for Netlify */}
+                  <input type="hidden" name="form-name" value="contact" />
+                  <input type="hidden" name="bot-field" />
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                       <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
@@ -158,8 +176,6 @@ export default function ContactPage() {
                         id="name"
                         name="name"
                         required
-                        value={formData.name}
-                        onChange={handleChange}
                         className="input-field"
                         placeholder="John Smith"
                       />
@@ -173,8 +189,6 @@ export default function ContactPage() {
                         type="text"
                         id="company"
                         name="company"
-                        value={formData.company}
-                        onChange={handleChange}
                         className="input-field"
                         placeholder="Your Company"
                       />
@@ -191,8 +205,6 @@ export default function ContactPage() {
                         id="email"
                         name="email"
                         required
-                        value={formData.email}
-                        onChange={handleChange}
                         className="input-field"
                         placeholder="john@company.com"
                       />
@@ -206,8 +218,6 @@ export default function ContactPage() {
                         type="tel"
                         id="phone"
                         name="phone"
-                        value={formData.phone}
-                        onChange={handleChange}
                         className="input-field"
                         placeholder="+971 XX XXX XXXX"
                       />
@@ -222,8 +232,6 @@ export default function ContactPage() {
                       id="subject"
                       name="subject"
                       required
-                      value={formData.subject}
-                      onChange={handleChange}
                       className="input-field"
                     >
                       <option value="">Select a subject</option>
@@ -247,8 +255,6 @@ export default function ContactPage() {
                       name="message"
                       required
                       rows={6}
-                      value={formData.message}
-                      onChange={handleChange}
                       className="textarea-field"
                       placeholder="Please provide details about your inquiry..."
                     />
@@ -270,9 +276,10 @@ export default function ContactPage() {
 
                   <button
                     type="submit"
-                    className="btn-primary w-full md:w-auto"
+                    disabled={loading}
+                    className="btn-primary w-full md:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Send Message
+                    {loading ? 'Sending...' : 'Send Message'}
                   </button>
                 </form>
               </div>
